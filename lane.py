@@ -4,12 +4,6 @@ def timer():
     current_time = now.strftime("%H:%M:%S")
     print("Current Time =", current_time)
     return(current_time)
-# import time
-# def timer():
-#    now = time.localtime(time.time())
-#    print(now)
-#    return now[5]
-
 
 list = []
 class LaneRange:
@@ -32,30 +26,19 @@ def RaiseCounter(laneId):
 
 
 def creatList():
-    # appending instances to list
-    list.append(LaneRange(151,539,588,657))#
-    # list.append(LaneRange(646,721,411,440))#2
-    # list.append(LaneRange(685, 771, 439, 460))  # 3
-    # list.append(LaneRange(804, 880, 426, 434))  # 4
-    list.append(LaneRange(1318, 1381, 639, 806))  # 1
-    #--------------------------------------------------------
-    # list.append(LaneRange(1434, 1440, 508, 538))  # 6
-    # list.append(LaneRange(1474, 1479, 547, 571))  # 7
-    #--------------------------------------------------------
-    list.append(LaneRange(1762, 1790, 551, 649))  # new 6 and 7 =2
+    # A list of directions in which each member contains the range of the his  direction
+    list.append(LaneRange(151,539,588,657))
+    list.append(LaneRange(1318, 1381, 639, 806))  
+    list.append(LaneRange(1762, 1790, 551, 649))  
 
-    list.append(LaneRange(1275,1286, 543,596 ))  #            3
-    # list.append(LaneRange(1842,1864, 650,713 ))  # 3
+    list.append(LaneRange(1275,1286, 543,596 )) 
 
-    list.append(LaneRange(533,1002, 887, 969))  #             4
-    # list.append(LaneRange(801,964,745,775))  # 10=5
-    # list.append(LaneRange(682,805,739,754))  #11=6
-    list.append(LaneRange(540,675, 720, 738))  # 12=7               5
-    list.append(LaneRange(41, 191, 495, 593))  # 13 8          6
-    # list.append(LaneRange(35, 88, 473, 507))  # 14
-    # list.append(LaneRange(125, 182, 453, 475))  # 15
-    # list.append(LaneRange(196, 255, 430, 455))  # 16
-    list.append(LaneRange(1002, 1279, 445, 473))  # 17 9                  7
+    list.append(LaneRange(533,1002, 887, 969))  
+   
+    list.append(LaneRange(540,675, 720, 738))  
+    list.append(LaneRange(41, 191, 495, 593)) 
+   
+    list.append(LaneRange(1002, 1279, 445, 473)) 
 
     return ""
 
