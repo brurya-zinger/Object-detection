@@ -34,7 +34,7 @@ id =''
 ids = []
 #Initialize a list
 lane.creatList()
-# create a new XLSX workbook
+# create a excel sheet 
 workbook = xlsxwriter.Workbook('result.xlsx')
 worksheet = workbook.add_worksheet()
 worksheet.write('A1', 'Hour')
@@ -50,18 +50,19 @@ while True:
         tempo = float(1 / delay)
         # sleep(tempo)
         height, width, _ = img.shape
-        # construct a blob from the input image and then perform a forward
-        # pass of the YOLO object detector, giving us our bounding boxes and
-        # associated probabilities
+        # build the data (blob)  from the input image and then forward to  YOLO object detector,
+        #giving us our bounding boxes and the confidences  that it is the correct detection
+       
+ 
         blob = cv2.dnn.blobFromImage(img, 1 / 255.0, (256, 256),
                                      swapRB=True, crop=False)
-        # determine only the *output* layer names that we need from YOLO
+        #  the *output* layer names that we need from YOLO
         ln = net.getLayerNames()
         ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
         net.setInput(blob)
         layerOutputs = net.forward(ln)
         # initialize our lists of detected bounding boxes, confidences, and
-        # class IDs, respectively
+        # class IDs
         boxes = []
         confidences = []
         class_ids = []
@@ -91,31 +92,20 @@ while True:
                     class_ids.append(class_id)
                     # detections.append([x, y, w, h])
 
-
+        #Create the lines that were intended to count the vehicles in each direction
         cv2.line(img, (539 ,  657), (151 ,  588), (255, 255, 255), thickness=3)  # white, no 0
-        cv2.line(img, (1381 ,  639), (1318  , 806), (100, 0, 255), thickness=3)  # 1
-        #--------------------------------------------------------------------------------
-
+        cv2.line(img, (1381 ,  639), (1318  , 806), (100, 0, 255), thickness=3)  #
         cv2.line(img, (1790  , 551), (1762,   649), (0, 255, 255), thickness=3)  # 6,7 =     2
-
-
-
         cv2.line(img, (1275 ,  543), (1286 ,  596), (207, 59, 93), thickness=3)  # no 3
-
         cv2.line(img, (1002,   969), (533  , 887), (222, 100, 93), thickness=3)  # no  4,5,6      4
-
-
         cv2.line(img, (675  , 738), (540  , 720), (207, 59, 93), thickness=3)  # no 12             5
         cv2.line(img, (191  , 495), (41 ,  593), (0, 255, 255), thickness=3)  # yellow no,13        6
-
         cv2.line(img, (1002 ,  445), (1279 ,   473), (255, 255, 255), thickness=3)  # white no 17        7
 
 
-
-        # apply non-maxima suppression to suppress weak, overlapping bounding
-        # boxes
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
-
+# Creating the rectangle of object boundaries,add the class name,id(from the tracker
+#To count cars that have not yet been counted and are not tracked
         font = cv2.FONT_HERSHEY_PLAIN
         colors = np.random.uniform(0, 255, size=(len(boxes), 3))
         # ensure at least one detection exists
@@ -138,33 +128,30 @@ while True:
                 cv2.putText(img, label + " "+str(id) , (x, y + 20), font, 2, (255, 255, 255), 2)
 
                 # Path calculation
+                #get the  central point of the object
                 centro = lane.pega_centro(x, y, w, h)
                 #detec.append(centro)
 
                 if label == 'car' or label == 'truck' or label == 'bus' or label == 'motorcycle' :
 
 
-                    if id not in ids:
-                        print("in if")
+                    if id not in ids:#the ID has not yet been counted
+                        #print("in if")
+                        #By the center point of the object we  calculated in which direction the object is located
                         laneId = lane.pathCalculation(centro[0],centro[1])
                         print("lane id  ", laneId)
                         if laneId!=-1:
-
-
-                            print(counterWrite,"before")
-
-
                             ids.append(id)
                             lane.RaiseCounter(laneId)
-                            # t='A'+str(counterWrite)
+                            #add the data to the excel sheet 
                             worksheet.write('A'+str(counterWrite), str(lane.timer()))
                             worksheet.write('B' + str(counterWrite), id)
                             worksheet.write('C'+str(counterWrite), laneId)
                             worksheet.write('D'+str(counterWrite), label)
                             counterWrite+=1
+                            #For the visuals while running we will create a red circle that will appear during the count
                             cv2.circle(img, centro, 4, (0, 0, 255), 3)
-                            # if len(ids)>150:
-                            #     ids= []
+                            
 
         frame_list.append(img)
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
